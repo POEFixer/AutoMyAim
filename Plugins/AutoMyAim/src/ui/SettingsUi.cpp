@@ -72,6 +72,9 @@ void AutoMyAimPlugin::DrawSettings() {
     }
     ImGui::Spacing();
     DrawSectionDiagnostics();
+    ImGui::Spacing();
+    PluginUi::Hint("Originally created by Omer Faruk ARPA. Maintained by POEFixer. GPL-3.0.");
+    ImGui::Spacing();
     ImGui::PopID();
 
     // Save shortly after an edit completes (not every frame of a drag), so a
@@ -116,12 +119,12 @@ void AutoMyAimPlugin::DrawHeader() {
 
 void AutoMyAimPlugin::DrawSectionKeys() {
     PluginUi::BeginCard("##keys");
-    Heading(ICON_FA_KEYBOARD, "Keys");
-    HelpMarker("Click a key button, then press the key or mouse button to use. Esc cancels, Clear removes the "
-               "key. A click cannot bind the left mouse button (clicking is how you use the button), so it has "
-               "its own button.\n\n"
-               "To aim while you use a skill on a mouse button, give Aim (hold) that same button: holding it "
-               "casts and aims; releasing it stops. Keep always-on aim off with that setup.");
+    Heading(ICON_FA_KEYBOARD, "Keys",
+            "Click a key button, then press the key or mouse button to use. Esc cancels, Clear removes the "
+            "key. A click cannot bind the left mouse button (clicking is how you use the button), so it has "
+            "its own button.\n\n"
+            "To aim while you use a skill on a mouse button, give Aim (hold) that same button: holding it "
+            "casts and aims; releasing it stops. Keep always-on aim off with that setup.");
     AutoMyAimConfig::Settings& s = m_settings;
     const float x0 = ImGui::GetCursorPosX();
     const LabelColumn col({"Aim (hold)", "Toggle always-on"});
@@ -202,10 +205,10 @@ void AutoMyAimPlugin::DrawSectionTargeting() {
 
 void AutoMyAimPlugin::DrawSectionPriority() {
     PluginUi::BeginCard("##priority");
-    Heading(ICON_FA_SCALE_BALANCED, "Which monster first");
-    HelpMarker("Every monster in range gets a score; the highest score is aimed at. Closeness always counts; "
-               "rarity and life add to it, fading with distance, so a far rare monster does not pull the "
-               "cursor away from one next to you unless you give rarity a large weight.");
+    Heading(ICON_FA_SCALE_BALANCED, "Which monster first",
+            "Every monster in range gets a score; the highest score is aimed at. Closeness always counts; "
+            "rarity and life add to it, fading with distance, so a far rare monster does not pull the "
+            "cursor away from one next to you unless you give rarity a large weight.");
     AutoMyAimConfig::Settings& s = m_settings;
     const LabelColumn col({"Closeness", "Magic", "Rare", "Unique", "Life weight"});
 
@@ -349,12 +352,8 @@ void AutoMyAimPlugin::DrawSectionDisplay() {
 }
 
 void AutoMyAimPlugin::DrawSectionDiagnostics() {
-    const PluginUi::Palette pal = PluginUi::Colors();
-    PluginUi::BeginCard("##diagnostics");
-    ImGui::PushStyleColor(ImGuiCol_Text, pal.Accent);
-    const bool open = ImGui::TreeNodeEx("##diagTree", ImGuiTreeNodeFlags_SpanAvailWidth, ICON_FA_BUG "  Diagnostics");
-    ImGui::PopStyleColor();
-    if (open) {
+    if (PluginUi::BeginDiagnostics("The aimed monster's readout in game, monsters in range, terrain and scan errors.")) {
+        const PluginUi::Palette pal = PluginUi::Colors();
         if (Check("Show the target's flags and buffs in game", "debug", &m_settings.debugShowTarget,
                   "Prints the aimed monster's rarity, distance, targetable flags and buff names under it.\n"
                   "Use it to find the buff name of a monster that cannot be hit.")) MarkDirty();
@@ -380,7 +379,6 @@ void AutoMyAimPlugin::DrawSectionDiagnostics() {
                           static_cast<unsigned long long>(m_worker.Faults()));
             Hint(line);
         }
-        ImGui::TreePop();
+        PluginUi::EndDiagnostics();
     }
-    PluginUi::EndCard();
 }

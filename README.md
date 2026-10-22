@@ -1,6 +1,6 @@
 # Auto My Aim
 
-Current version: 1.0.7
+Current version: 1.0.8
 
 Requires POE2Fixer 364 or newer.
 
