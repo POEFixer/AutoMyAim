@@ -277,6 +277,6 @@ extern "C" PLUGIN_API void DestroyPlugin(PluginSDK::Plugin* p) { delete p; }
 POEFIXER_PLUGIN_INFO(
     "AutoMyAim",
     "Auto My Aim",
-    "1.0.8",
+    "1.0.9",
     "Omer Faruk ARPA, POEFixer",
     "Moves the cursor onto the best monster near you while you hold a key or after a toggle, so skills cast at it; line of sight, rarity and life priority.")
